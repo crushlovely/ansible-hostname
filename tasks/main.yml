@@ -1,0 +1,28 @@
+---
+- name: Ensure aws tools are updated in repository
+  apt_repository: repo='ppa:awstools-dev/awstools'
+  sudo: yes
+
+- name: Ensure API tool are installed
+  apt: pkg=ec2-api-tools state=present
+  sudo: yes
+
+- name: Gather facts from EC2
+  shell: ec2-describe-instances -O {{ aws.access_key }} -W {{ aws.secret_key }} --filter "private-dns-name={{ ansible_fqdn }}" --filter "tag-key=Name" | grep Name | echo `awk '{print $5}'`
+  register: server_hostname
+
+- debug: var=server_hostname.stdout
+
+- name: Replace hostname file
+  template: src=hostname.j2 dest=/etc/hostname owner=root group=root backup=yes
+  sudo: yes
+
+- name: host is in the hosts file
+  lineinfile: dest=/etc/hosts state=present backup=yes regexp='^127.0.0.1' line='127.0.0.1 {{ server_hostname.stdout | regex_replace('_', '-') }} localhost'
+  sudo: yes
+
+- name: restart hostname
+  shell: /bin/hostname -F /etc/hostname
+  sudo: yes
+  notify:
+    - reboot server

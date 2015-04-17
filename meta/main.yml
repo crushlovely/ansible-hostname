@@ -1,0 +1,16 @@
+---
+galaxy_info:
+  author: Pablo Castillo
+  company: Crush & Lovely
+  description: Uses AWS EC2 API tools to edit the Ubuntu server hostname
+  license: MIT
+  min_ansible_version: 1.5
+  platforms:
+    - name: Ubuntu
+      versions:
+        - all
+  categories:
+    - system
+    - cloud
+dependencies: []
+version: 1.0.0
