@@ -1,1 +1,1 @@
-{{ server_hostname.stdout }}
+{{ server_hostname.stdout | regex_replace('_', '-') }}

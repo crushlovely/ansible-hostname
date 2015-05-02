@@ -11,7 +11,7 @@
   shell: ec2-describe-instances -O {{ aws.access_key }} -W {{ aws.secret_key }} --filter "private-dns-name={{ ansible_fqdn }}" --filter "tag-key=Name" | grep Name | echo `awk '{print $5}'`
   register: server_hostname
 
-- debug: var=server_hostname.stdout
+- debug: var={{ server_hostname.stdout | regex_replace('_', '-') }}
 
 - name: Replace hostname file
   template: src=hostname.j2 dest=/etc/hostname owner=root group=root backup=yes
@@ -26,3 +26,6 @@
   sudo: yes
   notify:
     - reboot server
+
+- name: Wait for server to reboot
+  pause: seconds=60
