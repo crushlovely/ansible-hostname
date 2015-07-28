@@ -1,4 +1,0 @@
----
-- name: reboot server
-  command: reboot now
-  sudo: yes

@@ -4,7 +4,7 @@ galaxy_info:
   company: Crush & Lovely
   description: Uses AWS EC2 API tools to edit the Ubuntu server hostname
   license: MIT
-  min_ansible_version: 1.5
+  min_ansible_version: 1.7
   platforms:
     - name: Ubuntu
       versions:
