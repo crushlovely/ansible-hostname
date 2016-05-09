@@ -8,7 +8,7 @@
   sudo: yes
 
 - name: Gather facts from EC2
-  shell: ec2-describe-instances -O {{ aws_access_key }} -W {{ aws_secret_key }} --filter "private-dns-name={{ ansible_fqdn }}" --filter "tag-key=Name" | grep Name | echo `awk '{print $5}'`
+  shell: ec2-describe-instances -O {{ aws_access_key }} -W {{ aws_secret_key }} --filter "private-ip-address={{ ansible_eth0.ipv4.address }}" --filter "tag-key=Name" | grep Name | echo `awk '{print $5}'`
   register: server_hostname
 
 - debug: var={{ server_hostname.stdout | regex_replace('_', '-') }}
