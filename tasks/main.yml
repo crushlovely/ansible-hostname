@@ -25,8 +25,14 @@
   shell: /bin/hostname -F /etc/hostname
   sudo: yes
 
-- name: Reboot Server
-  command: reboot now
+- name: Check Public IP Address
+  shell: "curl -s checkip.dyndns.org | sed -e 's/.*Current IP Address: //' -e 's/<.*$//' "
+  register: server_ip_address
 
-- name: Wait for server to reboot
-  pause: seconds=60
+- debug: var={{server_ip_address.stdout}}
+
+- name: Restart servers
+  command: sudo reboot now
+
+- name: Wait for SSH to come up
+  local_action: wait_for host={{server_ip_address.stdout}} port=22 delay=100 timeout=320 state=started
